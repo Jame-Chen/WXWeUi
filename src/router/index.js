@@ -1,10 +1,12 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import huyue from '../views/huyue.vue';
+import postarticle from '../views/postarticle.vue';
 Vue.use(Router);
 const router = new Router({
   // mode:'history',
   routes: [{
-      path: '/',
+      path: '/index',
       name: 'index',
       meta: {
         title: 'herox',
@@ -22,6 +24,26 @@ const router = new Router({
         keepAlive: false
       },
       component: resolve => require(['@/views/Test.vue'], resolve)
+    },
+    {
+      path: '/',
+      name: 'huyue',
+      meta: {
+        title: '互阅',
+        auth: false, //需要登录
+        keepAlive: false
+      },
+      component:huyue// resolve => require(['@/views/huyue.vue'], resolve)
+    },
+    {
+      path: '/postarticle',
+      name: 'postarticle',
+      meta: {
+        title: '发布文章',
+        auth: false, //需要登录
+        keepAlive: false
+      },
+      component:postarticle// resolve => require(['@/views/postarticle.vue'], resolve)
     },
   ]
 });

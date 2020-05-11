@@ -1,10 +1,10 @@
 /**
  * 提示与加载工具类
  */
-import axios from '../../http'
-import OSS from 'ali-oss'
-import qs from 'qs'
-import nanoid from 'nanoid'
+// import axios from '../../http'
+// import OSS from 'ali-oss'
+// import qs from 'qs'
+// import nanoid from 'nanoid'
 export default class utils {
     constructor() {
     }
@@ -50,4 +50,5 @@ export default class utils {
             return true;
         }
     }
+    
 }
