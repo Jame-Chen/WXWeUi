@@ -6,7 +6,7 @@
 
 <script>
 import $ from './assets/jquery-vendor.js';
-
+import '../public/js/zepto.weui.js';
 export default {
   name: 'app',
   components: {
