@@ -55,7 +55,7 @@
             <img :src="item.PicUrl" />
           </div>
           <div class="cleft">
-            <div>{{item.Title}}</div>
+            <div :class="item.IsRead?'read':''">{{item.Title}}</div>
             <div class="num">
               <span>{{item.Author}}</span>
               <span>{{getDateDiff(item.ModifyTime)}}</span>
@@ -73,6 +73,7 @@ import Api from "../http/api";
 export default {
   data() {
     return {
+      userId: "",
       article: []
     };
   },
@@ -111,23 +112,16 @@ export default {
       });
     },
     readArticle: function(Id, Url) {
-      $.post(
-        "http://bobchen.top:5000/api/Article_Record/ReadArticle?Id=" + Id,
-        {},
-        function(res) {
-          if (res.Code == "200") {
-            location.href = Url;
-          }else{
-             $.alert(res.Msg, "提示", function() {});
-          }
+      Api.post(
+        "Article_Record/ReadArticle?Id=" + Id + "&UserId=" + this.userId,
+        {}
+      ).then(res => {
+        if (res.Code == "200") {
+          location.href = Url;
+        } else {
+          $.alert(res.Msg, "提示", function() {});
         }
-      );
-      // Api.post("Article_Record/ReadArticle?Id="+Id, {}).then(res => {
-      //   alert(res.Msg);
-      //   if (res.Code == "200") {
-      //     location.href = Url;
-      //   }
-      // });
+      });
     },
     //getDateDiff("2018-11-23 15:30")  //return  5小时前
     getDateDiff(dateTimeStamp) {
@@ -167,6 +161,7 @@ export default {
     }
   },
   mounted() {
+    this.userId = "管理员";
     this.inintSwipe();
     this.initArticle();
   }
@@ -214,11 +209,9 @@ export default {
     }
   }
 }
-// .cleft div:nth-child(1) {
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   white-space: nowrap;
-// }
+.read {
+  color: #ccc;
+}
 .cright {
   float: right;
   width: 120px;

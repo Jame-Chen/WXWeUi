@@ -168,9 +168,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.weui-input {
-  font-size: 14px;
-}
 .weui-header {
   font-weight: bold;
   .weui-header-title {

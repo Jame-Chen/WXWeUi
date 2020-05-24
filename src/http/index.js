@@ -3,6 +3,7 @@ import axios from 'axios';
 import router from 'vue-router';
 import Cookies from 'js-cookie';
 import store from '../store';
+import qs from 'qs';
 /**
  * 定义请求常量
  * TIME_OUT、ERR_OK
@@ -19,11 +20,18 @@ axios.defaults.baseURL = 'http://bobchen.top:5000/api/';
 // 封装请求拦截
 axios.interceptors.request.use(
     config => {
+        
         config.headers['Content-Type'] = 'application/json;charset=UTF-8';
         // config.headers['accessToken'] = '';
         // if (Cookies.getJSON('loginMsg')) {
         //     config.headers['accessToken'] = Cookies.getJSON('loginMsg').token
         // }
+        if (config.method === 'post') {
+            config.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+            config.transformRequest = [function (data, headers) {
+                return qs.stringify(data);
+            }];
+        }
         return config;
     },
     error => {
