@@ -58,7 +58,7 @@
             <div :class="item.IsRead?'read':''">{{item.Title}}</div>
             <div class="num">
               <span>{{item.Author}}</span>
-              <span>{{getDateDiff(item.ModifyTime)}}</span>
+              <span>{{item.ModifyTime}}</span>
               <span>{{item.ReadNum}}</span>
             </div>
           </div>
@@ -70,15 +70,50 @@
 <script>
 import "../../public/js/swipe.js";
 import Api from "../http/api";
+import util from "../utils/index";
+import api from "../http/api";
 export default {
   data() {
     return {
       userId: "",
+      appid: "wx5e40c57bde272ccc",
+      AppSecret: "15673703365014e3df03521c4e0bfb3e",
+      myurl: "http://bobchen.top",
       article: []
     };
   },
   methods: {
-    inintSwipe: function() {
+    initUser: function() {
+      const data = util.parseQueryString();
+      if (util.isEmptyObject(data)) {
+        var url =
+          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+          this.appid +
+          "&redirect_uri=" +
+          this.myurl +
+          "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+        console.log(url);
+        location.href = url;
+      } else {
+        $.alert(JSON.stringify(data), "标题", function() {});
+        const url2 =
+          "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" +
+          this.appid +
+          "&secret=" +
+          this.AppSecret +
+          "&code=" +
+          data.code +
+          "&grant_type=authorization_code";
+        Api.get(encodeURI(url2), {})
+          .then(res => {
+            $.alert(JSON.stringify(res), "标题", function() {});
+          })
+          .catch(err => {
+            $.alert(JSON.stringify(err), "标题", function() {});
+          });
+      }
+    },
+    initSwipe: function() {
       $("#slide2").swipeSlide({
         autoSwipe: true, //自动切换默认是
         speed: 3000, //速度默认4000
@@ -106,6 +141,7 @@ export default {
         if (res.Code == "200") {
           res.Data.forEach((v, i) => {
             v.PicUrl = "http://bobchen.top:5000" + v.PicUrl;
+            v.ModifyTime = util.getDateDiff(v.ModifyTime);
           });
           this.article = res.Data;
         }
@@ -122,47 +158,12 @@ export default {
           $.alert(res.Msg, "提示", function() {});
         }
       });
-    },
-    //getDateDiff("2018-11-23 15:30")  //return  5小时前
-    getDateDiff(dateTimeStamp) {
-      var result;
-      var minute = 1000 * 60;
-      var hour = minute * 60;
-      var day = hour * 24;
-      var halfamonth = day * 15;
-      var month = day * 30;
-      var now = new Date().getTime();
-      var diffValue = now - new Date(dateTimeStamp).getTime();
-      if (diffValue < 0) {
-        return;
-      }
-      var monthC = diffValue / month;
-      var weekC = diffValue / (7 * day);
-      var dayC = diffValue / day;
-      var hourC = diffValue / hour;
-      var minC = diffValue / minute;
-      if (monthC >= 1) {
-        if (monthC <= 12) result = "" + parseInt(monthC) + "月前";
-        else {
-          result = "" + parseInt(monthC / 12) + "年前";
-        }
-      } else if (weekC >= 1) {
-        result = "" + parseInt(weekC) + "周前";
-      } else if (dayC >= 1) {
-        result = "" + parseInt(dayC) + "天前";
-      } else if (hourC >= 1) {
-        result = "" + parseInt(hourC) + "小时前";
-      } else if (minC >= 1) {
-        result = "" + parseInt(minC) + "分钟前";
-      } else {
-        result = "刚刚";
-      }
-      return result;
     }
   },
   mounted() {
+    this.initUser();
     this.userId = "管理员";
-    this.inintSwipe();
+    this.initSwipe();
     this.initArticle();
   }
 };
