@@ -6,7 +6,7 @@ Vue.use(Router);
 const router = new Router({
   // mode:'history',
   routes: [{
-      path: '/index',
+      path: '/',
       name: 'index',
       meta: {
         title: 'herox',
@@ -26,7 +26,7 @@ const router = new Router({
       component: resolve => require(['@/views/Test.vue'], resolve)
     },
     {
-      path: '/',
+      path: '/huyue',
       name: 'huyue',
       meta: {
         title: '互阅',

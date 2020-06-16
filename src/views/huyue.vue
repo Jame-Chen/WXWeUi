@@ -71,48 +71,15 @@
 import "../../public/js/swipe.js";
 import Api from "../http/api";
 import util from "../utils/index";
-import api from "../http/api";
 export default {
   data() {
     return {
-      userId: "",
-      appid: "wx5e40c57bde272ccc",
-      AppSecret: "15673703365014e3df03521c4e0bfb3e",
-      myurl: "http://bobchen.top",
+      
       article: []
     };
   },
   methods: {
-    initUser: function() {
-      const data = util.parseQueryString();
-      if (util.isEmptyObject(data)) {
-        var url =
-          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-          this.appid +
-          "&redirect_uri=" +
-          this.myurl +
-          "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
-        console.log(url);
-        location.href = url;
-      } else {
-        $.alert(JSON.stringify(data), "标题", function() {});
-        const url2 =
-          "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" +
-          this.appid +
-          "&secret=" +
-          this.AppSecret +
-          "&code=" +
-          data.code +
-          "&grant_type=authorization_code";
-        Api.get(encodeURI(url2), {})
-          .then(res => {
-            $.alert(JSON.stringify(res), "标题", function() {});
-          })
-          .catch(err => {
-            $.alert(JSON.stringify(err), "标题", function() {});
-          });
-      }
-    },
+    
     initSwipe: function() {
       $("#slide2").swipeSlide({
         autoSwipe: true, //自动切换默认是
@@ -161,7 +128,7 @@ export default {
     }
   },
   mounted() {
-    this.initUser();
+  
     this.userId = "管理员";
     this.initSwipe();
     this.initArticle();
